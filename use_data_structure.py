@@ -1,5 +1,6 @@
 import getpass
 import FortigateApi
+
 ip = input('enter IP: ')
 vdom = input('Enter VDOM: ')
 user = input('Enter Username: ')
@@ -59,7 +60,6 @@ for i in dest_pool_keys:
         services_udp.append(dest_pool_ips[i][3])
     else:
         pass
- 
 
 for i in services_tcp:
     f.AddFwService(name=(i+'-TCP'), tcp_portrange=i, udp_portrange='', protocol='TCP/UDP/SCTP', fqdn='', iprange='0.0.0.0',  comment='')
