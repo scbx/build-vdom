@@ -20,8 +20,10 @@ def logic_checker(entry, source_ips, dest_ips, wca):
     if 'any' in entry:
         if entry[2] == 'any':
             dest_ips.append(entry[4]+'/32')
+            source_ips.append('all')
         elif entry[4] == 'any':
             source_ips.append(entry[3]+'/32')
+            dest_ips.append('all')
         else:
             print('no match ' + entry)
             pass
@@ -80,7 +82,7 @@ with open(dpool, mode='rt') as f:
     for entry in line_entries:
         entry = entry.strip(' ').split(' ')
         if entry[5] == 'udp' or entry[5] == 'tcp':
-            dest_pool_ips[entry[6]+'_'+entry[8]] = [entry[6],entry[8],entry[7],entry[9], entry[5] ]
+            dest_pool_ips[entry[5]+'_'+entry[9]+'-'+entry[8]+'_'+entry[6]] = [entry[6],entry[8],entry[7],entry[9], entry[5] ]
         else:
-            dest_pool_ips[entry[5]+'_'+entry[6]] = [entry[5],entry[6],'0-65535','0-65535', '']
+            dest_pool_ips['all'+'-'+entry[6]+'_'+entry[5]] = [entry[5],entry[6],'0-65535','0-65535', '']
 
