@@ -17,7 +17,7 @@ for i in source_ip_keys:
 
 for i in source_ip_keys:
     if len(source_ips[i]) > 0:
-        f.AddFwAddressGroup(name=(i+'-source'), member_list=source_ips[i])
+        f.SetFwAddressGroup(name=(i+'-source'), member_list=source_ips[i])
     else:
         pass
 
@@ -29,7 +29,7 @@ for i in dest_ip_keys:
 
 for i in dest_ip_keys:
     if len(dest_ips[i]) > 0:
-        f.AddFwAddressGroup(name=(i+'-dest'), member_list=dest_ips[i])
+        f.SetFwAddressGroup(name=(i+'-dest'), member_list=dest_ips[i])
     else:
         pass
 
@@ -60,6 +60,7 @@ for i in dest_pool_keys:
         services_udp.append(dest_pool_ips[i][3])
     else:
         pass
+ 
 
 for i in services_tcp:
     f.AddFwService(name=(i+'-TCP'), tcp_portrange=i, udp_portrange='', protocol='TCP/UDP/SCTP', fqdn='', iprange='0.0.0.0',  comment='')
@@ -68,6 +69,7 @@ for i in services_udp:
         
 #ADD FW POLICES FOR INSIDE ZONE TO OUTSIDE ZONE USING SOURCENAT OBJECTS
 for i in source_ip_keys:
+    print("making rule for " +i)
     f.AddFwPolicy(srcintf='INSIDE_ZONE', dstintf='OUTSIDE_ZONE', srcaddr=(i+'-source'), dstaddr=(i+'-dest'), service='ALL', action='accept', schedule='always', nat='enable', poolname=i, ippool='enable', status='enable', comments='', traffic_shaper='', traffic_shaper_reverse='')
 #f.AddFwAddressgroup(, ip_addrs)
 for i in dest_pool_keys:
@@ -76,4 +78,3 @@ for i in dest_pool_keys:
         pass
     else:
         f.AddFwPolicy(srcintf='OUTSIDE_ZONE', dstintf='INSIDE_ZONE', srcaddr='all', dstaddr=i, service='ALL', action='accept', schedule='always', nat='disable', poolname=i, ippool=[], status='enable', comments='', traffic_shaper='', traffic_shaper_reverse='')
-
